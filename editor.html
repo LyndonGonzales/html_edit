@@ -1,0 +1,77 @@
+<!--
+To add a button that saves the file with a specific filename and another button to load a file, you can modify the previous HTML code as follows:
+
+```html
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notepad-like Text Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 400px;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="notepad" placeholder="Start typing..."></textarea>
+  
+  <button onclick="saveFile()">Save File</button>
+  <input type="file" id="fileInput" style="display: none;">
+  <button onclick="loadFile()">Load File</button>
+
+  <script>
+    const notepad = document.getElementById('notepad');
+    const fileInput = document.getElementById('fileInput');
+
+    // Save the text to a file with a specific filename
+    function saveFile() {
+      const textToSave = notepad.value;
+      const filename = 'notepad_file.txt';
+      const blob = new Blob([textToSave], { type: 'text/plain' });
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    }
+
+    // Load a file and populate the textarea with its content
+    function loadFile() {
+      fileInput.click();
+    }
+
+    fileInput.addEventListener('change', function() {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const contents = e.target.result;
+        notepad.value = contents;
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
+
+<!--
+
+In this updated code, we have added two buttons: "Save File" and "Load File". 
+
+The `saveFile()` function is triggered when the "Save File" button is clicked. It retrieves the text from the textarea, creates a Blob object with the text content, and generates a download link with a specific filename. When the link is clicked programmatically, the file is downloaded.
+
+The `loadFile()` function is triggered when the "Load File" button is clicked. It programmatically clicks the hidden file input element, which opens the file selection dialog. Once a file is selected, the `change` event listener reads the file using the FileReader API and populates the textarea with its content.
+
+Note: The save functionality will prompt the user to save the file with the specified filename, while the load functionality allows the user to select a file from their device.
+-->

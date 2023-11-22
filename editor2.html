@@ -1,0 +1,85 @@
+<!--To add a button that saves the current file to a new filename and another button to load any file for editing, you can modify the previous HTML code as follows:
+
+```html
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notepad-like Text Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 400px;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="notepad" placeholder="Start typing..."></textarea>
+  
+  <button id="saveBtn">Save as</button>
+  <input type="file" id="loadFile" style="display: none;">
+  <button id="loadBtn">Load file</button>
+
+  <script>
+    const notepad = document.getElementById('notepad');
+    const saveBtn = document.getElementById('saveBtn');
+    const loadFile = document.getElementById('loadFile');
+    const loadBtn = document.getElementById('loadBtn');
+
+    // Retrieve the text from local storage (if available) and populate the textarea
+    notepad.value = localStorage.getItem('notepadText') || '';
+
+    // Save the text to local storage whenever there's a change
+    notepad.addEventListener('input', function() {
+      localStorage.setItem('notepadText', notepad.value);
+    });
+
+    // Save the current file to a new filename
+    saveBtn.addEventListener('click', function() {
+      const textToSave = notepad.value;
+      const filename = prompt('Enter a filename:');
+      if (filename) {
+        const blob = new Blob([textToSave], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+
+    // Load a file for editing
+    loadBtn.addEventListener('click', function() {
+      loadFile.click();
+    });
+
+    loadFile.addEventListener('change', function() {
+      const file = loadFile.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        notepad.value = e.target.result;
+        localStorage.setItem('notepadText', notepad.value);
+      };
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
+<!--
+```
+
+In this updated code, we have added two buttons: "Save as" and "Load file". The "Save as" button allows the user to save the current file with a new filename. When clicked, it prompts the user to enter a filename, creates a Blob with the text content, and generates a download link for the file. The file is then downloaded when the link is clicked.
+
+The "Load file" button triggers the file input element (`<input type="file">`) to open the file selection dialog. Once a file is selected, it reads the file using the FileReader API and sets the content of the textarea to the loaded file's content. The loaded text is also saved to local storage.
+
+Note: The "Load file" button will only work when running the code on a web server due to security restrictions.
+-->
